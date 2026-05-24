@@ -1,0 +1,39 @@
+/*
+2026/5/24
+1.使用unordered_map
+2.分辨key與value使用時機
+3.Hash Table 擅長快速搜尋、插入、刪除
+*/
+//Two-pass Hash Table
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        unordered_map<int,int> num;
+        for(int i=0;i<nums.size();i++){
+            num[nums[i]]=i;
+        }
+        for(int i=0;i<nums.size();i++){
+            int diff=target-nums[i];
+            if(num.count(diff) && num[diff]!=i){
+                return {i,num[diff]} ;
+            }
+        }
+        return {};
+    }
+};
+
+//One-pass Hash Table
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        unordered_map<int,int> num;
+        for(int i=0;i<nums.size();i++){
+            int diff=target-nums[i];
+            if(num.count(diff)){
+                return {i,num[diff]} ;
+            }
+            num[nums[i]]=i;
+        }
+        return {};
+    }
+};
