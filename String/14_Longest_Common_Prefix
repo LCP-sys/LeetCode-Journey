@@ -1,0 +1,57 @@
+//2026/7/8
+//自己寫的，用二元搜尋法逼近同樣的最後一個字
+//缺點:遞迴並重複使用substr影響效能
+//需注意測資邊界問題，若string長度為0需直接輸出""
+class Solution {
+public:
+    int find_loc(vector<string>& strs,size_t h,size_t l){//head last
+        if(l<=h){
+            char c=strs[0][h];
+            for(const auto& s: strs){
+                if(c!=s[h])
+                    return h-1;
+            }
+            return h;
+        }
+        string s0=strs[0].substr(h,(l-h)/2+1);
+        bool check=1;
+        for(const auto& s : strs){
+            if(s0!=s.substr(h,(l-h)/2+1)){
+                check=0;
+                break;
+            }
+        }
+        if(check==0)
+            return find_loc(strs,h,(h+l)/2);
+        return find_loc(strs,(h+l)/2+1,l);
+    }
+    string longestCommonPrefix(vector<string>& strs) {
+        size_t length=201;
+        for(const auto& s : strs){
+            length=min(s.size(),length);
+        }
+        if(length==0)
+            return "";
+        int ans=find_loc(strs,0,length-1);
+        return strs[0].substr(0,ans+1);
+    }
+};
+//參考解答
+//邏輯:用sort排列可以把會讓差序最大的string在頭尾，只需比較頭尾即可，邏輯較簡單
+//缺點:sort排列string較耗效能，實測兩者時間都是0ms，記憶體使用這個較大
+class Solution {
+public:
+    string longestCommonPrefix(vector<string>& v) {
+        string ans="";
+        sort(v.begin(),v.end());
+        int n=v.size();
+        string first=v[0],last=v[n-1];
+        for(int i=0;i<min(first.size(),last.size());i++){
+            if(first[i]!=last[i]){
+                return ans;
+            }
+            ans+=first[i];
+        }
+        return ans;
+    }
+};
