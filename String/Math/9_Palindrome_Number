@@ -1,0 +1,30 @@
+// 2026/7/13
+//自己寫法:把int轉成string從頭尾依序比較是否相同
+//缺點:較耗空間
+class Solution {
+public:
+    bool isPalindrome(int x) {
+        string s=to_string(x);
+        for(size_t i=0;i<s.size()/2;i++){
+            if(s[i]!=s[s.size()-1-i])
+                return 0;
+        }
+        return 1;
+    }
+};
+//參考解答
+//邏輯:用數學方法反轉後半段再跟前半段比較
+//注意:0結尾與0要個別討論、若有奇數位數則要用x==revert/10判斷
+class Solution {
+public:
+    bool isPalindrome(int x) {
+        if(x < 0 || (x % 10 == 0 && x != 0))
+            return 0;
+        int revert=0;
+        while(x>revert){
+            revert=revert*10+x%10;
+            x/=10;
+        }
+        return x==revert || x==revert/10;
+    }
+};
