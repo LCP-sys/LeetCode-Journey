@@ -1,0 +1,60 @@
+//2026/7/15
+//自己寫的，用數學方法算出位置
+//優點:不佔空間
+//缺點:程式不易閱讀
+//若有兩特性輪流交換可用flag=-flag判斷
+class Solution {
+public:
+    string convert(string s, int numRows) {
+        if(numRows==1)
+            return s;
+        string ans;
+        size_t i=0;
+        while(i<s.size()){
+            ans+=s[i];
+            i+=2*(numRows-1);
+        }
+        for(size_t i=1;i<numRows-1;i++){
+            size_t j=i;
+            int times=1;
+            while(j<s.size()){
+                ans+=s[j];
+                if(times==1)
+                    j+=(numRows-1-i)*2;
+                else j+=i*2;
+                times=-times;
+            }
+        }
+        i=numRows-1;
+        while(i<s.size()){
+            ans+=s[i];
+            i+=2*(numRows-1);
+        }
+        return ans;
+    }
+};
+//參考解答
+//走訪string把每個char放到對應的rows，最後再合併
+//用flag判斷往上往下
+//缺點:vector<string>佔空間
+class Solution {
+public:
+    string convert(string s, int numRows) {
+        if(numRows==1 || s.size()<=numRows)
+            return s;
+        vector<string> rows(numRows);
+        int flag=-1;
+        int cur_row=0;
+        for(char c:s){
+            rows[cur_row]+=c;
+            if(cur_row==0 || cur_row==numRows-1)
+                flag=-flag;
+            cur_row+=flag;
+        }
+        string ans;
+        for(const string &str:rows){
+            ans+=str;
+        }
+        return ans;
+    }
+};
