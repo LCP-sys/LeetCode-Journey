@@ -1,0 +1,47 @@
+//2026/7/16
+//自己寫的，重複用erase移除元素
+//效能非常差
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        if(nums.size()==0 || nums.size()==1)
+            return nums.size();
+        size_t i=1;
+        while(i<nums.size()){
+            if(nums[i]==nums[i-1]){
+                nums.erase(nums.begin()+i);
+            }else ++i;
+        }
+        return nums.size();
+    }
+};
+//參考解答:雙指標
+//邏輯:輸出只會用到前k個數，因此只需要新的數放到前面即可，後面的垃圾資訊不用刪除
+//用slow讀取當前最新數字與位置，用fast走訪所有元素，把新元素加入在slow後面
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        if(nums.size()==0 || nums.size()==1)
+            return nums.size();
+        int slow=0;
+        int fast=1;
+        while(fast<nums.size()){
+            if(nums[fast]!=nums[slow]){
+                ++slow;
+                nums[slow]=nums[fast];
+            }
+            ++fast;
+        }
+        return ++slow;
+    }
+};
+//STL演算法
+//std::unique會把非重複元素放到前面，並回傳最後一個非重複元素位置
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+       auto it=std::unique(nums.begin(),nums.end());
+       nums.erase(it,nums.end());
+       return nums.size();
+    }
+};
