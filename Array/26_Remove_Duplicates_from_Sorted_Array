@@ -35,7 +35,7 @@ public:
         return ++slow;
     }
 };
-//STL演算法
+//STL演算法，原理一樣是two pointers
 //std::unique會把非重複元素放到前面，並回傳最後一個非重複元素位置
 class Solution {
 public:
