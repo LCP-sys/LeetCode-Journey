@@ -1,0 +1,51 @@
+//2026/7/17
+//自己寫的用雙指標遞迴找出最大值
+//缺點:遞迴筆迴圈吃效能、程式可讀性差
+class Solution {
+public:
+    int find_max(vector<int>& height,int n,int m){
+        int cur=min(height[n],height[m])*(m-n);
+        if(height[n]<=height[m]){
+            for(int i=n+1;i<m;i++){
+                if(height[n]<height[i]){
+                    if(cur<=min(height[i],height[m])*(m-i))
+                        return find_max(height,i,m); 
+                    else if(height[i]>=height[m]) 
+                        return max(cur,find_max(height,i,m));
+                }
+            }
+        }else{
+            for(int i=m-1;i>n;i--){
+                if(height[m]<height[i]){
+                    if(cur<=min(height[n],height[i])*(i-n))
+                        return find_max(height,n,i); 
+                    else if(height[i]>=height[n])
+                        return max(cur,find_max(height,n,i));
+                }
+            }
+        }
+        return cur;
+    }
+    int maxArea(vector<int>& height) {
+        return find_max(height,0,height.size()-1);
+    }
+};
+//參考解答
+//邏輯相似，即使移動會使cur變小也移動，統一用max_area記錄最大值
+//迴圈較遞迴省效能
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int left=0;
+        int right=height.size()-1;
+        int max_area=0;
+        while(left<right){
+            int cur=min(height[left],height[right])*(right-left);
+            max_area=max(cur,max_area);
+            if(height[left]<=height[right])
+                ++left;
+            else --right;
+        }
+        return max_area;
+    }
+};
