@@ -1,0 +1,62 @@
+//2026/7/22
+//自己想的索引覆蓋法，從左到右列舉n所有可能
+//用&引用同一個string可以減少記憶體使用，需要使用cur來分隔有效數據與無效數據
+//注意:s必須設定大小不然s[cur]會記憶體越界、必須用遞迴必須用cur+1不能用cur++會影響當次第回的cur
+class Solution {
+public:
+    void helper(vector<string> &v,string &s,const int &n,int left,int right,int cur){
+        if(left>=n){
+            for(;cur<2*n;cur++)
+                s[cur]=')';
+            v.push_back(s);
+            return;
+        }
+        if(left<n){
+            s[cur]='(';
+            helper(v,s,n,left+1,right,cur+1);
+        }
+        if(left>right){
+            s[cur]=')';
+            helper(v,s,n,left,right+1,cur+1);
+        }
+    }
+    vector<string> generateParenthesis(int n) {
+        vector<string> v;
+        string s(2*n,' ');
+        helper(v,s,n,0,0,0);
+        return v;
+    }
+};
+//參考解答:回溯法
+//邏輯同上都是有左到右列舉所有可能
+//但是使用s.push_back()跟s.pop_back()來前往路徑與回溯路徑
+//優點:不知道字串長度也可以使用、是一個通用模板可以使用在找出所有排列
+class Solution {
+public:
+    void backtrack(vector<string> &v,string &s,const int &n,int left,int right){
+        if(left>=n){
+            for(int i=0;i<n-right;i++)
+                s.push_back(')');
+            v.push_back(s);
+            for(int i=0;i<n-right;i++)
+                s.pop_back();
+            return;
+        }
+        if(left<n){
+            s.push_back('(');
+            backtrack(v,s,n,left+1,right);
+            s.pop_back();
+        }
+        if(right<left){
+            s.push_back(')');
+            backtrack(v,s,n,left,right+1);
+            s.pop_back();
+        }
+    }
+    vector<string> generateParenthesis(int n) {
+        vector<string> v;
+        string s="";
+        backtrack(v,s,n,0,0);
+        return v;
+    }
+};
