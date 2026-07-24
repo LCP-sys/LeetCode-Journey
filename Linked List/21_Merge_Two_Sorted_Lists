@@ -1,0 +1,81 @@
+//2026/7/24
+//自己想的，利用dummy head跟tail新建立list
+//在不能改變原list的標準解法
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+        ListNode *head=new ListNode;
+        ListNode *tail=head;
+        while(list1!= NULL && list2!= NULL){
+            if(list1->val<=list2->val){
+                tail->next=new ListNode(list1->val);
+                tail=tail->next;
+                list1=list1->next;
+            }else{
+                tail->next=new ListNode(list2->val);
+                tail=tail->next;
+                list2=list2->next;
+            }
+        }
+        while(list1!= NULL){
+            tail->next=new ListNode(list1->val);
+            tail=tail->next;
+            list1=list1->next;
+        }
+        while(list2!= NULL){
+            tail->next=new ListNode(list2->val);
+            tail=tail->next;
+            list2=list2->next;
+        }
+        ListNode *p=head->next;
+        delete head;
+        return p;
+    }
+};
+//參考答案:遞迴法
+//把最小的找出來後剩下部分重複跑mergeTwoLists
+//邏輯簡單但會改變原lists
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+        if(list1==NULL)
+            return list2;
+        if(list2==NULL)
+            return list1;
+        if(list1->val<=list2->val){
+            list1->next=mergeTwoLists(list1->next,list2);
+            return list1;
+        } else{
+            list2->next=mergeTwoLists(list1,list2->next);
+            return list2;
+        }
+    }
+};
+//參考解答:迴圈法
+//找出較小值後直接連接過去不new新的Node
+//會改燕原lists
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+        ListNode *head=new ListNode;
+        ListNode *tail=head;
+        while(list1!= NULL && list2!= NULL){
+            if(list1->val<=list2->val){
+                tail->next=list1;
+                tail=tail->next;
+                list1=list1->next;
+            }else{
+                tail->next=list2;
+                tail=tail->next;
+                list2=list2->next;
+            }
+        }
+        if(!list1)
+            tail->next=list2;
+        if(!list2)
+            tail->next=list1;
+        ListNode *p=head->next;
+        delete head;
+        return p;
+    }
+};
