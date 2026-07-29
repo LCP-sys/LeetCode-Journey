@@ -1,0 +1,55 @@
+//2026/7/29
+//自己想的，把int變成string翻轉
+//缺點:複雜且耗記憶體
+class Solution {
+public:
+    int reverse(int x) {
+        if(x>=0){
+            string s=to_string(x);
+            string maxm="7463847412";
+            if(s.size()==10){
+                for(int i=9;i>=0;i--){
+                    if(s[i]>maxm[i])
+                        return 0;
+                    if(s[i]<maxm[i])
+                        break;
+                }
+            }
+            std::reverse(s.begin(),s.end());
+            return stoi(s);
+        }else{
+            string s=to_string(x);
+            string minm="-8463847412";
+            if(s.size()==11){
+                for(int i=10;i>0;i--){
+                    if(s[i]>minm[i])
+                        return 0;
+                    if(s[i]<minm[i])
+                        break;
+                }
+            }
+            std::reverse(s.begin()+1,s.end());
+            return stoi(s);
+        }
+    }
+};
+//參考解答:純數學算法
+//利用%取出最左邊的數字，用/把數字向右移，用*10+pop把數字塞入
+//需在最後一次*10前判斷是否超出int範圍
+class Solution {
+public:
+    int reverse(int x) {
+        int rev=0;
+        int pop;
+        while(x!=0){
+            pop=x%10;
+            x/=10;
+            if(rev>INT_MAX/10 || (rev==INT_MAX/10)&& pop>7)
+                return 0;
+            if(rev<INT_MIN/10 || (rev==INT_MIN/10)&& pop<-8)
+                return 0;
+            rev=rev*10+pop;
+        }
+        return rev;
+    }
+};
