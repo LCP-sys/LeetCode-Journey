@@ -1,0 +1,66 @@
+//2026/7/30
+//自己想的，dividend一次一次減divisor
+class Solution {
+public:
+    int divide(int dividend, int divisor) {
+        if(divisor==1)
+            return dividend;
+        if(divisor==-1){
+            if(dividend==-INT_MAX-1)
+                return INT_MAX;
+            return -dividend;
+        }
+        long long times=0;
+        bool negative=0;
+        if(dividend>0)
+            dividend=-dividend;
+        else negative=!(negative);
+        if(divisor>0)
+            divisor=-divisor;
+        else negative=!(negative);
+        while(dividend<=divisor){
+            dividend-=divisor;
+            times++;
+        }
+        if(negative==1)
+            times=-times;
+        if(times>INT_MAX)
+            return INT_MAX;
+        if(times<-INT_MAX-1)
+            return -INT_MAX-1;
+        return times;
+    }
+};
+//參考解答:用d<<=1快速接近dividend
+//需要注意divisor==-1&&dividend==-2^31會溢位需要單獨判斷
+//d<<1=需要注意會不會超出INT_MIN
+class Solution {
+public:
+    int divide(int dividend, int divisor) {
+        if(divisor==1)
+            return dividend;
+        if(divisor==-1){
+            if(dividend==-INT_MAX-1)
+                return INT_MAX;
+            return -dividend;
+        }
+        bool negative=dividend<0 ^ divisor<0;
+        int q=0;
+        if(dividend>0)
+            dividend=-dividend;
+        if(divisor>0)
+            divisor=-divisor;
+        while(dividend<=divisor){
+            int d=divisor;
+            int times=-1;
+            int half_min=INT_MIN>>1;
+            while(dividend<=d<<1 && d>=half_min){
+                d<<=1;
+                times<<=1;
+            }
+            dividend-=d;
+            q+=times;
+        }
+        return negative ? q : -q;
+    }
+};
