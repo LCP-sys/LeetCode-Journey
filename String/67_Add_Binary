@@ -1,0 +1,76 @@
+//2026/8/3
+//直接在a,b中選擇長的並直接加上短的，之後在考慮進位
+//缺點:邏輯重複、不易維護
+class Solution {
+public:
+    string addBinary(string a, string b) {
+        if(a=="0" && b=="0")
+            return "0";
+        if(a.size()>=b.size()){
+            int diff=a.size()-b.size();
+            for(int i=b.size()-1;i>=0;i--){
+                a[i+diff]+=b[i]-'0';
+            }
+            for(int i=a.size()-1;i>0;i--){
+                if(a[i]>'1'){
+                    a[i]-=2;
+                    a[i-1]++;
+                }
+            }
+            if(a[0]=='1')
+                return a;
+            else{
+                a[0]-=2;
+                return '1'+a;
+            }
+        }
+        else{
+            int diff=b.size()-a.size();
+            for(int i=a.size()-1;i>=0;i--){
+                b[i+diff]+=a[i]-'0';
+            }
+            for(int i=b.size()-1;i>0;i--){
+                if(b[i]>'1'){
+                    b[i]-=2;
+                    b[i-1]++;
+                }
+            }
+            if(b[0]=='1')
+                return b;
+            else{
+                b[0]-=2;
+                return '1'+b;
+            }
+        }
+    }
+};
+
+//與之前Linked List加法邏輯一樣
+//用i,j分別走訪a,b，只要還有一個指標沒有走到底或是有carry則繼續執行
+//再把每一次的結果儲存到新的string
+class Solution {
+public:
+    string addBinary(string a, string b) {
+        string ans;
+        ans.reserve(max(a.size(),b.size())+1);
+        int i=a.size()-1;
+        int j=b.size()-1;
+        int carry=0;
+        while(i>=0 || j>=0 || carry){
+            int sum=carry;
+            if(i>=0){
+                sum+=a[i]-'0';
+                i--;
+            }
+            if(j>=0){
+                sum+=b[j]-'0';
+                j--;
+            }      
+            carry=sum/2;
+            sum%=2;
+            ans.push_back(sum+'0');
+        }
+        std::reverse(ans.begin(),ans.end());
+        return ans;
+    }
+};
