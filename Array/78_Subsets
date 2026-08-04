@@ -1,0 +1,42 @@
+//2026/8/4
+//自己想的，標準做法，因為每個元素只有兩種狀態
+//可以用int的每個bit模擬所有可能
+class Solution {
+public:
+    vector<vector<int>> subsets(vector<int>& nums) {
+        vector<vector<int>> ans;
+        int possible=1<<nums.size();//比pow好
+        for(int i=0;i<possible;i++){
+            vector<int> set;
+            for(int j=0;j<nums.size();j++){
+                if(((i>>j)&1)==1)
+                    set.push_back(nums[j]);
+            }
+            ans.push_back(set);
+        }
+        return ans;
+    }
+};
+//回溯法
+//因為是遞迴所以效率較差，但可以通用在更複雜的情況
+class Solution {
+public:
+    void path(vector<int>& nums,vector<vector<int>> &ans,vector<int>& now,const int &p){
+        if(p>=nums.size()){
+            ans.push_back(now);
+            return;
+        }
+        now.push_back(nums[p]);
+        path(nums,ans,now,p+1);
+        now.pop_back();
+        path(nums,ans,now,p+1);
+    }
+    vector<vector<int>> subsets(vector<int>& nums) {
+        vector<vector<int>> ans;
+        ans.reserve(1<<nums.size());
+        vector<int> now;
+        now.reserve(nums.size());
+        path(nums,ans,now,0);
+        return ans;
+    }
+};
