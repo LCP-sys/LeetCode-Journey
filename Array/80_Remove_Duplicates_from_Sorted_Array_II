@@ -1,0 +1,32 @@
+//2026/8/5
+//雙指標，slow記錄當前位置，fast走訪array
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        if(nums.size()<=2)
+            return nums.size();
+        int slow=1;
+        int fast=2;
+        while(fast<nums.size()){
+            if(nums[fast]!=nums[slow-1]){
+                slow++;
+                nums[slow]=nums[fast];
+            }
+            fast++;
+        }
+        return slow+1;
+    }
+};
+//精簡寫法
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        int i=0;
+        for(int num:nums){
+            if(i<2 || num>nums[i-2]){
+                nums[i++]=num;
+            }
+        }
+        return i;
+    }
+};
