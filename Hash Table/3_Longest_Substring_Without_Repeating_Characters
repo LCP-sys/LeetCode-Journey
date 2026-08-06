@@ -1,0 +1,38 @@
+//2026/8/6
+//用視窗法儲存合法substr
+//用vector記錄每個char上次出現的位置
+//如果重複出現則把視窗左側移動到上次出現的右邊
+//最後算出最大長度
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        vector<int> pos(128,-1);
+        int left=0;
+        int ans=0;
+        for(int right=0;right<s.size();right++){
+            char c=s[right];
+            if(pos[c]>=left){
+                left=pos[c]+1;
+            }
+            pos[c]=right;
+            ans=max(ans,right-left+1);
+        }
+        return ans;
+    }
+};
+//同理，但是window改用string儲存，用.find找到上次出現的位置
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        string window;
+        int ans=0;
+        for(char c:s){
+            int pos=window.find(c);
+            if(pos!=string::npos)
+                window.erase(0,pos+1);
+            window.push_back(c);
+            ans=max(ans,static_cast<int>(window.size()));
+        }
+        return ans;
+    }
+};
