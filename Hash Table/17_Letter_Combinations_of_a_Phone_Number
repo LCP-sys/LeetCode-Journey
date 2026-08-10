@@ -1,0 +1,50 @@
+//2026/8/10
+//Backtracking 回溯法
+//因為輸入範圍小且對應字母固定所以用vector不用unordered_map
+class Solution {
+public:
+    void path(string &digits,vector<string> &index,vector<string> &ans,string &s,int pos){
+        if(pos>=digits.size()){
+            ans.push_back(s);
+            return;
+        }
+        int num=digits[pos]-'0'-2;
+        for(int i=0;i<index[num].size();i++){
+            s.push_back(index[num][i]);
+            path(digits,index,ans,s,pos+1);
+            s.pop_back();
+        }
+    }
+    vector<string> letterCombinations(string digits) {
+        vector<string> index={"abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"};
+        vector<string> ans;
+        string s;
+        path(digits,index,ans,s,0);
+        return ans;
+    }
+};
+//同理但使用固定的const string可以避免遞迴傳遞index浪費效能
+class Solution {
+private:
+    const string index[8]={"abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"};
+
+public:
+    void path(string &digits,vector<string> &ans,string &s,int pos){
+        if(pos>=digits.size()){
+            ans.push_back(s);
+            return;
+        }
+        int num=digits[pos]-'0'-2;
+        for(int i=0;i<index[num].size();i++){
+            s.push_back(index[num][i]);
+            path(digits,ans,s,pos+1);
+            s.pop_back();
+        }
+    }
+    vector<string> letterCombinations(string digits) {
+        vector<string> ans;
+        string s;
+        path(digits,ans,s,0);
+        return ans;
+    }
+};
