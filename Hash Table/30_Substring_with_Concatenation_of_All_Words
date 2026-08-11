@@ -1,0 +1,50 @@
+//2026/8/11
+//利用移動視窗找合理的組合
+//因為words的元素可能重複，所以需要開一個unordered_map seen記錄當前視窗每個元素有多少個
+//如果當前視窗元素超過應有的量則移動left使該元素數量恢復正常
+//若元素總量符合應有總量則該視窗為答案
+//視窗移動技巧:每次都移動length但是從i開始移(0<=i<length)這樣也可以走訪所有可能
+class Solution {
+public:
+    vector<int> findSubstring(string s, vector<string>& words) {
+        vector<int> ans;
+        unordered_map <string,int> counts;
+        for(string word:words)
+            counts[word]++;
+        int length=words[0].size();
+        int total_counts=words.size();
+        int total_length=length*total_counts;
+        for(int i=0;i<length;i++){
+            int right=i;
+            int left=i;
+            int seen_counts=0;
+            unordered_map<string,int> seen;
+            while(right+length-1<s.size()){
+                string sub=s.substr(right,length);
+                if(counts.count(sub)==1){
+                    seen[sub]++;
+                    seen_counts++;
+                    if(seen[sub]>counts[sub]){
+                        bool find=0;
+                        while(!find){//移動left直到多的元素刪除
+                            string sub2=s.substr(left,length);
+                            seen[sub2]--;
+                            seen_counts--;
+                            left+=length;
+                            if(sub==sub2)
+                                find=1;
+                        }
+                    }
+                    if(total_counts==seen_counts)
+                        ans.push_back(left);
+                }else{
+                    left=right+length;//視窗內只能是合法的元素，所以要+length
+                    seen.clear();
+                    seen_counts=0;
+                }
+                right+=length;
+            }
+        }
+        return ans;
+    }
+};
