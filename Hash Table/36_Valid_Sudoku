@@ -1,0 +1,62 @@
+//2026/8/12
+//自己寫的，用unordered_map記錄是否出現，1並依照各條件分別跑迴圈
+//缺點:unordered_map比array吃效能、重複跑多次迴圈
+class Solution {
+public:
+    bool isValidSudoku(vector<vector<char>>& board) {
+        unordered_map <int,int> num;
+        for(int i=0;i<9;i++){
+            for(int j=0;j<9;j++){
+                if(board[i][j]!='.' && num.count(board[i][j])==1)
+                    return false;
+                num[board[i][j]]++;
+            }
+            num.clear();
+            for(int j=0;j<9;j++){
+                if(board[j][i]!='.' && num.count(board[j][i])==1)
+                    return false;
+                num[board[j][i]]++;
+            }
+            num.clear();
+        }
+        for(int i=0;i<3;i++){
+            for(int j=0;j<3;j++){
+                for(int k=0;k<3;k++){
+                    for(int l=0;l<3;l++){
+                        if(board[3*i+k][3*j+l]!='.' && num.count(board[3*i+k][3*j+l])==1)
+                            return false;
+                        num[board[3*i+k][3*j+l]]++;
+                    }
+                }
+                num.clear();
+            }
+        }
+        return true;
+    }
+};
+//參考解答
+//因為輸入簡單所以用array記錄即可
+//為了避免重複跑迴圈，所以變成建立多個hash table，在一次迴圈中判斷是否符合所有hash table
+//bool rows[n][m]表示第n個row是否出現過m
+class Solution {
+public:
+    bool isValidSudoku(vector<vector<char>>& board) {
+        bool rows[9][9]={0};
+        bool cols[9][9]={0};
+        bool boxes[9][9]={0};
+        for(int i=0;i<9;i++){
+            for(int j=0;j<9;j++){
+                if(board[i][j]=='.')
+                    continue;
+                int num=board[i][j]-'1';
+                int box_index=i/3+3*(j/3);
+                if(rows[i][num] || cols[j][num] || boxes[box_index][num])
+                    return false;
+                rows[i][num]=true;
+                cols[j][num]=true;
+                boxes[box_index][num]=true;
+            }
+        }
+        return true;
+    }
+};
