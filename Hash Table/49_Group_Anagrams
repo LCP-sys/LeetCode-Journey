@@ -1,0 +1,89 @@
+//2026/8/13
+//自己寫的，邏輯混亂
+//缺點:在sort中用sort結果排序導致多次不必要的sort
+class Solution {
+public:
+    void record(string &s,int times[26]){
+        for(char c:s)
+                times[c-'a']++;
+    }
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        if(strs.size()==0)
+            return {{}};
+        if(strs.size()==1)
+            return {strs};
+        vector<vector<string>> ans;
+        sort(strs.begin(),strs.end(),[](const string &a,const string &b){
+            if(a.size()!=b.size())
+                return a.size()<b.size();
+            string m=a;
+            string n=b;
+            sort(m.begin(),m.end());
+            sort(n.begin(),n.end());
+            return m<n;
+        });
+        int length;
+        vector<string> group={};
+        int times[26]={0};
+        int pos=0;
+        while(pos<strs.size() && strs[pos]==""){
+            group.push_back("");
+            pos++;
+        }
+        if(group.size()!=0)
+            ans.push_back(group);
+        group.clear();
+        if(pos<strs.size()){
+            record(strs[pos],times);
+        }else return ans;
+        while(pos<strs.size()){
+            if(group.size()==0){
+                length=strs[pos].size();
+                group.push_back(strs[pos]);
+                pos++;
+                continue;
+            }
+            int pos_times[26]={0};
+                bool check=1;
+                record(strs[pos],pos_times);
+                for(int i=0;i<26;i++){
+                    if(times[i]!=pos_times[i])
+                        check=0;
+                    if(!check)
+                        times[i]=pos_times[i];
+                }
+                if(check){
+                    group.push_back(strs[pos]);
+                    pos++;
+                }
+                else{
+                    ans.push_back(group);
+                    group.clear();
+                }
+        }
+        ans.push_back(group);
+        return ans;
+    }
+};
+//參考解答
+//邏輯:同一組的string在sort後會一樣，用key記錄sort後的string，用value記錄同一組的vector
+//全部記錄完後再改用vector<vector<string>>記錄
+//因為unordered_map不會再用到所以直接用std::move節省效能
+//可以用for(auto &[key,value]:hash) 走訪所有存在的key-value
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        unordered_map<string,vector<string>> hash;
+        for(string &str:strs){
+            string s=str;
+            sort(s.begin(),s.end());
+            hash[s].push_back(str);
+        }
+        vector<vector<string>> ans;
+        ans.reserve(hash.size());
+        for(auto &[key,value]:hash){
+            ans.push_back(move(value));
+        }
+        return ans;
+    }
+};
