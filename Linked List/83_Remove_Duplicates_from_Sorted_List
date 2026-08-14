@@ -1,0 +1,40 @@
+//2026/8/14
+//自己想的 邏輯:找到下一個不同數字後直接連接過去
+//缺點:中間跳過的Node依然存在記憶體中
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        if(!head || !head->next)
+            return head;
+        ListNode* tail=head;
+        ListNode* p=head;
+        while(p->next){
+            if(p->next->val > tail->val){
+                tail->next=p->next;;
+                tail=tail->next;
+            }
+            p=p->next;
+        }
+        tail->next=NULL;
+        return head;
+    }
+};
+//參考解答:
+//邏輯:把重複的Node刪除
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        if(!head || !head->next)
+            return head;
+        ListNode* cur=head;
+        while(cur && cur->next){
+            if(cur->val==cur->next->val){
+                ListNode* p=cur->next->next;
+                delete cur->next;
+                cur->next=p;
+            }
+            else cur=cur->next;
+        }
+        return head;
+    }
+};
