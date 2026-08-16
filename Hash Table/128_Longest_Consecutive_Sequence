@@ -1,0 +1,20 @@
+//2026/8/11
+//unordered_set是只記錄key的hash table
+//邏輯:因為需要知道這個數字前面有沒有數字因此用unordered_set儲存
+//之後再從每一個開頭數字計算長度取最長
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+        unordered_set<int> s(nums.begin(),nums.end());
+        int ans=0;
+        for(int num:s){
+            if(!s.count(num-1)){
+                int length=1;
+                while(s.count(++num))
+                    length++;
+                ans=max(ans,length);
+            }
+        }
+        return ans;
+    }
+};
