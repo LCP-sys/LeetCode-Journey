@@ -1,0 +1,72 @@
+//2026/8/17
+//邏輯:回文有拓展性，只要確定中間是回文就可以嘗試往左右兩邊拓展
+//缺點;把奇數回文跟偶數回文分開處理，速度快但不易閱讀、維護
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        if(s.size()<=1)
+            return s;
+        int ans_left=0;
+        int ans_right=0;
+        for(int i=0;i<s.size()-2;i++){
+            if(s[i]==s[i+2]){
+                int length=0;
+                while(i-length>0 && i+3+length<s.size()){
+                    if(s[i-length-1]==s[i+3+length])
+                        length++;
+                    else break;
+                }
+                if(ans_right-ans_left+1<3+2*length){
+                    ans_right=i+2+length;
+                    ans_left=i-length;
+                }
+            }
+            if(s[i]==s[i+1]){
+                int length=0;
+                while(i-length>0 && i+2+length<s.size()){
+                    if(s[i-length-1]==s[i+2+length])
+                        length++;
+                    else break;
+                }
+                if(ans_right-ans_left+1 < 2+2*length){
+                    ans_right=i+1+length;
+                    ans_left=i-length;
+                }
+            }
+        }
+        if(s[s.size()-1]==s[s.size()-2] && ans_right-ans_left<1)
+            return s.substr(s.size()-2,2);
+        if(ans_right-ans_left<1)
+            return s.substr(0,1);
+        return s.substr(ans_left,ans_right-ans_left+1);
+    }
+};
+//參考解答
+//把奇數回文跟偶數回文用expand整合
+//把left,right改成start,length，在使用substr時易讀
+class Solution {
+private:
+int expand(const string &s,int left,int right){
+    while(left>=0 && right<s.size() && s[left]==s[right]){
+        left--;
+        right++;
+    }
+    return right-left-1;
+}
+
+public:
+    string longestPalindrome(string s) {
+        if(s.size()<=1)
+            return s;
+        int start=0;
+        int max_length=0;
+        for(int i=0;i<s.size();i++){
+            int length=max(expand(s,i,i),expand(s,i,i+1));
+            if(length>max_length){
+                max_length=length;
+                start=i-(length-1)/2;
+            }
+        }
+        return s.substr(start,max_length);
+    }
+};
