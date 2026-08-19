@@ -1,0 +1,25 @@
+//2026/8/19
+//自己想的，用unordered_set記錄有的數字去尋找沒有的數字
+class Solution {
+public:
+    int missingNumber(vector<int>& nums) {
+        unordered_set<int> hash(nums.begin(),nums.end());
+        for(int i=0;i<=nums.size();i++){
+            if(hash.count(i)==0)
+                return i;
+        }
+        return -1;
+    }
+};
+//參考解答:XOR
+//XOR有結合律且X^0=X,X^X=0，因此把0到n取XOR再把nums所有元素也取XOR就可以得到不見的數字
+class Solution {
+public:
+    int missingNumber(vector<int>& nums) {
+        int missing_num=nums.size();
+        for(int i=0;i<nums.size();i++){
+            missing_num^=i^nums[i];
+        }
+        return missing_num;
+    }
+};
