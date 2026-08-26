@@ -1,0 +1,32 @@
+//2026/8/26
+//邏輯:sort之後走訪nums跳過重複的元素，在用two pointer尋找另外兩個相加共為0
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        if(nums.size()<3)
+            return {};
+        vector<vector<int>> ans;
+        sort(nums.begin(),nums.end());
+        for(int i=0;i<nums.size()-2 && nums[i]<=0;i++){
+            if(i>0 && nums[i-1]==nums[i])
+                continue;
+            int left=i+1;
+            int right=nums.size()-1;
+            while(right>left){
+                if(nums[i]+nums[left]+nums[right]==0){
+                    ans.push_back({nums[i],nums[left],nums[right]});
+                    while(left<right && nums[left+1]==nums[left])
+                        left++;
+                    left++;
+                    while(left<right && nums[right-1]==nums[right])
+                        right--;
+                    right--;
+                }
+                else if(nums[i]+nums[left]+nums[right]>0)
+                    right--;
+                else left++;
+            }
+        }
+        return ans;
+    }
+};
