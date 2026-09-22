@@ -1,0 +1,28 @@
+//2026/9/22
+//用stack儲存最新的括號去判斷是否合法
+//strlen放在for會一直重算，需用一個變數儲存
+bool isValid(char* s) {
+    char stack[20000];
+    int num=0;
+    int n=strlen(s);
+    for(int i=0;i<n;i++){
+        if(s[i]=='(' || s[i]=='[' || s[i]=='{'){
+            stack[num++]=s[i];
+        }
+        else if(num==0)
+            return 0;
+        else if(s[i]==')'){
+            if(stack[--num]!='(')
+                return 0;
+        }
+        else if(s[i]==']'){
+            if(stack[--num]!='[')
+                return 0;
+        }
+        else if(s[i]=='}'){
+            if(stack[--num]!='{')
+                return 0;
+        }
+    }
+    return !num;
+}
