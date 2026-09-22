@@ -1,0 +1,72 @@
+//2026/9/22
+//自己寫的，把合法的dir存在stack內
+//遇到.就略過、遇到..就pop
+class Solution {
+public:
+    string simplifyPath(string path) {
+        vector<string> stack;
+        int left=0;
+        int right;
+        int n=path.size();
+        string ans;
+        for(int i=1;i<n;i++){
+            if(path[i]=='/'|| i==n-1){
+                if(i==n-1 && path[i]!='/')
+                    right=i+1;
+                else right=i;
+                if(right-left==1){
+                    left=right;
+                    continue;
+                }
+                string sub=path.substr(left+1,right-left-1);
+                if(sub=="."){
+                    left=right;
+                    continue;
+                }
+                if(sub==".."){
+                    if(!stack.empty())
+                        stack.pop_back();
+                    left=right;
+                    continue;
+                }
+                stack.push_back(sub);
+                left=right;
+            }
+            
+        }
+        ans.push_back('/');
+            for(int i=0;i<stack.size();i++){
+                ans+=stack[i];
+                if(i!=stack.size()-1)
+                   ans.push_back('/');
+            }
+        return ans;
+    }
+};
+//參考解答
+//演算法一樣，但是用getline切分'/'讀取資料
+class Solution {
+public:
+    string simplifyPath(string path) {
+        std::vector<std::string> stack;
+        std::stringstream ss(path);
+        std::string dir;
+        while (std::getline(ss, dir, '/')) {
+            if (dir == "" || dir == ".") {
+                continue;
+            }
+            if (dir == "..") {
+                if (!stack.empty()) {
+                    stack.pop_back();
+                }
+            } else {
+                stack.push_back(dir);
+            }
+        }
+        std::string ans;
+        for (const std::string& s : stack) {
+            ans += "/" + s;
+        }
+        return ans.empty() ? "/" : ans;
+    }
+};
